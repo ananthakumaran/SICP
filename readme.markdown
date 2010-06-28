@@ -1,5 +1,4 @@
-My solutions for the exercises in SICP(second edition).
-MIT Scheme is used to run the solutions.
+My solutions to the exercises in SICP(second edition).
 
 Note
 ----
