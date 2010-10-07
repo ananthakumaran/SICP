@@ -23,6 +23,13 @@
 (define (first-cond exp) (car exp))
 (define (rest-cond exp) (cdr exp))
 (define (empty? exp) (null? exp)
+(define (conditions exp) (cdr exp))
+
+(define (and? exp)
+  (tagged-list? exp 'and))
+
+(define (or? exp)
+  (tagged-list? exp 'or))
 
 (define (eval-and exp env)
   (if (empty? (first-cond exp))
@@ -33,12 +40,6 @@
 	      (eval-and (rest-cond exp) env)
 	      'false))))
 
-(define (and? exp)
-  (tagged-list? exp 'and))
-
-(define (or? exp)
-  (tagged-list? exp 'or))
-
 (define (eval-or exp env)
   (if (empty? (first-cond exp))
       'false
@@ -46,3 +47,45 @@
 	(if val
 	    val
 	    (eval-or (rest-cond exp) env)))))
+
+;; Derived and and or
+(define (or->if exp)
+  (if (empty? (first-cond exp))
+      'false
+      (make-if (first-cond exp)
+	       (first-cond exp)
+	       (or->if (rest-cond exp)))))
+
+(define (and->if exp)
+  (if (empty? (first-cond exp))
+      'true
+      (make-if (empty? (rest-cond exp))
+	       (first-cond exp) ;; last expression
+	       (make-if (first-cond exp)
+			(and->if (rest-cond exp))
+			'false))))
+
+(define (eval exp env)
+  (cond ((self-evaluating? exp) exp)
+	((variable? exp) (lookup-variable-value exp env))
+	((quoted? exp) (text-of-quotation exp))
+	((assignment? exp) (eval-assignment exp env))
+	((definition? exp) (eval-definition exp env))
+	((if? exp) (eval-if exp env))
+	((lambda? exp)
+	 (make-procedure (lambda-parameters exp)
+			 (lambda-body exp)
+			 env))
+	((begin? exp)
+	 (eval-sequence (begin-actions exp) env))
+	((cond? exp) (eval (cond->if exp) env))
+	((and? exp) (eval-if (conditions exp) env))
+	((or? exp) (eval-or (conditions exp) env))
+	((application? exp)
+	 (apply (eval (operator exp) env)
+		(list-of-values (operands exp) env)))
+	(else
+	 (error "Unknown expression type -- EVAL" exp))))
+
+
+
