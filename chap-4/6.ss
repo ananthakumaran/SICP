@@ -25,9 +25,9 @@
 	(body (let-body exp)))
     (let ((var (map (lambda (x) (car x)) params))
 	  (exp (map (lambda (x) (cadr x)) params)))
-      (append (list (make-let var body)) exp))))
+      (append (list (make-lambda var body)) exp))))
 
-(define (make-let var body)
+(define (make-lambda var body)
   (list 'lambda var body))
 
 (define (eval exp env)
