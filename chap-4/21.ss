@@ -57,16 +57,13 @@
 
 ;; fibonacci
 ((lambda (n)
-  ((lambda (fib result a b c)
-     (fib fib result a b c))
+  ((lambda (fib)
+     (fib fib '() 1 1 0))
    (lambda (fib result a b c)
      (if (= c n)
 	 result
-	 (fib fib (cons a result) b (+ a b) (+ c 1))))
-   '()
-   1
-   1
-   0)) 5)
+	 (fib fib (cons a result) b (+ a b) (+ c 1))))))
+   7)
 
 ;; f
 (define (f x)
