@@ -4,14 +4,16 @@
 ;; person 1 and person 2 are not the same person. Using your rule,
 ;; give queries that find the following:
 
-(rule (can-do ?job-1 ?job-2)
-      (or (same ?job-1 ?job-2)
-	  (can-do-job ?job-1 ?job-2)))
+(assert! (rule (can-do ?job-1 ?job-2)
+	       (or (same ?job-1 ?job-2)
+		   (can-do-job ?job-1 ?job-2))))
 
-(rule (replace ?person-1 ?person-2)
-      (and (job ?person-1-job ?person-1)
-	   (job ?person-2-job ?person-2)
-	   (can-do ?person-1-job ?person-2-job)
+(assert! (rule (replace ?person-1 ?person-2)
+	       (and (job ?person-1 ?person-1-job)
+		    (job ?person-2 ?person-2-job)
+		    (can-do ?person-1-job ?person-2-job)
+		    (not (same ?person-1 ?person-2)))))
+
 
 ;; a. all people who can replace Cy D. Fect;
 
@@ -24,4 +26,3 @@
      (salary ?y ?y-salary)
      (replace ?x ?y)
      (lisp-value < ?x-salary ?y-salary))
-

@@ -20,10 +20,25 @@
 ;; grandsons of Methushael.  (See *Note Exercise 4-69:: for some
 ;; rules to deduce more complicated relationships.)
 
-(rule (grandson ?g)
-      (and (son ?g ?f)
-	   (son ?f ?s)))
+(assert! (son Adam Cain))
+(assert! (son Cain Enoch))
+(assert! (son Enoch Irad))
+(assert! (son Irad Mehujael))
+(assert! (son Mehujael Methushael))
+(assert! (son Methushael Lamech))
+(assert! (wife Lamech Ada))
+(assert! (son Ada Jabal))
+(assert! (son Ada Jubal))
 
-(rule (sons ?m)
-      (and (wife ?m ?w)
-	   (son ?w ?s)))
+(assert! (rule (grandson ?g ?s)
+	       (and (son ?g ?f)
+		    (sons ?f ?s))))
+
+(assert! (rule (sons ?f ?s)
+	       (or (son ?f ?s)
+		   (and (wife ?f ?w)
+			(son ?w ?s)))))
+
+(grandson Cain ?x)
+(sons Lamech ?x)
+(grandson Methushael ?x)

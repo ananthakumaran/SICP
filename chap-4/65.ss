@@ -16,15 +16,20 @@
 ;; Why is Oliver Warbucks listed four times?
 
 ;; wheel rule
-(rule (wheel ?person)
-      (and (supervisor ?middle-manager ?person)
-	   (supervisor ?x ?middle-manager)))
+(assert! (rule (wheel ?person)
+	       (and (supervisor ?middle-manager ?person)
+		    (supervisor ?x ?middle-manager))))
 
+(wheel ?who)
 ;; matches
 
 (wheel (Warbucks Oliver)
        (and (supervisor (Scrooge Eben) (Warbucks Oliver))
 	    (supervisor (Cratchet Robert) (Scrooge Eben))))
+
+(wheel (Bendiddle Ben)
+       (and (supservisor (Hacker Alyssa P) (Bitdiddle Ben))
+	    (supervisor (Reasoner Louis) (Hacker Alyssa P))))
 
 (wheel (Warbucks Oliver)
        (and (supervisor (Bitdiddle Ben) (Warbucks Oliver))
